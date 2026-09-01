@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VoiceShield AI — Real-Time Voice Clone Defense</title>
+<meta name="description" content="VoiceShield AI detects synthetic and manipulated voices in real time, verifies speaker authenticity, and calculates contextual impersonation risk." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ TOP-LEVEL NAV (landing) ============ -->
+<header class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <button class="brand" data-nav="home" aria-label="VoiceShield AI home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2 L28 7 V15 C28 22.5 22.7 27.8 16 30 C9.3 27.8 4 22.5 4 15 V7 Z" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M9 16.5 L12 13 L14.5 19 L17.5 9 L20 16.5 L23 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>VoiceShield<em>AI</em></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#platform" data-scroll="platform">Platform</a>
+      <a href="#detection" data-scroll="detection">Detection</a>
+      <a href="#how" data-scroll="how">How It Works</a>
+      <a href="#usecases" data-scroll="usecases">Use Cases</a>
+      <a href="#tech" data-scroll="tech">Technology</a>
+      <a href="#research" data-scroll="research">Research</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" id="loginBtn">Log in</button>
+      <button class="btn btn-primary" data-nav="console">Launch Dashboard</button>
+    </div>
+    <button class="nav-burger" id="navBurger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ============ LANDING PAGE ============ -->
+<main id="page-home" class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">SIH 2026 · Voice Security Platform</p>
+        <h1>Stop voice cloning attacks before they become fraud.</h1>
+        <p class="hero-sub">VoiceShield AI detects synthetic and manipulated voices in real time, verifies speaker authenticity, and calculates contextual impersonation risk before sensitive actions are authorized.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" data-nav="console">Launch Security Console</button>
+          <button class="btn btn-outline btn-lg" data-scroll="detection">Explore Detection</button>
+        </div>
+        <div class="hero-stats">
+          <div><strong id="statCalls">0</strong><span>calls analyzed</span></div>
+          <div><strong id="statThreats">0</strong><span>threats stopped</span></div>
+          <div><strong id="statAccuracy">0%</strong><span>detection accuracy</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="false">
+        <div class="engine-card">
+          <div class="engine-row engine-row-top">
+            <span class="tag">VOICE STREAM</span>
+            <span class="live-dot">● LIVE</span>
+          </div>
+          <div class="waveform" id="heroWaveform"></div>
+          <div class="engine-flow">
+            <div class="flow-step">
+              <span class="flow-label">AI Voice Analysis</span>
+              <div class="flow-sub">Acoustic · Spectral · Prosodic</div>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <span class="flow-label">Authenticity</span>
+              <div class="flow-value" id="heroAuth">98.7%</div>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <span class="flow-label">Risk Score</span>
+              <div class="flow-value flow-value-risk" id="heroRisk">12 / 100</div>
+            </div>
+          </div>
+          <div class="engine-status status-verified" id="heroStatus">● VERIFIED</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UX story strip -->
+  <section class="story-strip" id="platform">
+    <div class="story-track">
+      <div class="story-node"><span class="story-num">1</span><p>Voice call</p></div>
+      <div class="story-line"></div>
+      <div class="story-node"><span class="story-num">2</span><p>AI detection</p></div>
+      <div class="story-line"></div>
+      <div class="story-node"><span class="story-num">3</span><p>Speaker verification</p></div>
+      <div class="story-line"></div>
+      <div class="story-node"><span class="story-num">4</span><p>Risk score</p></div>
+      <div class="story-line"></div>
+      <div class="story-node"><span class="story-num">5</span><p>Security action</p></div>
+    </div>
+  </section>
+
+  <!-- DETECTION ENGINE PREVIEW -->
+  <section class="section" id="detection">
+    <div class="section-head">
+      <p class="eyebrow">Detection</p>
+      <h2>Three engines analyze every syllable.</h2>
+      <p class="section-sub">Each call is scored across acoustic, spectral and prosodic dimensions before a single risk figure is produced.</p>
+    </div>
+    <div class="engine-triad">
+      <article class="engine-tile">
+        <h3>Acoustic Analysis</h3>
+        <p>Pitch, energy, voice quality, micro-prosody.</p>
+        <span class="pill pill-pass">PASSED</span>
+      </article>
+      <article class="engine-tile">
+        <h3>Spectral Analysis</h3>
+        <p>Spectral anomalies, frequency artifacts, synthetic patterns.</p>
+        <span class="pill pill-pass">PASSED</span>
+      </article>
+      <article class="engine-tile">
+        <h3>Prosodic Analysis</h3>
+        <p>Rhythm, intonation, speaking pattern, pauses.</p>
+        <span class="pill pill-pass">PASSED</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-head">
+      <p class="eyebrow">Workflow</p>
+      <h2>Detect. Verify. Score. Respond.</h2>
+    </div>
+    <div class="steps-row">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h3>Detect</h3>
+        <p>Identify AI-generated and manipulated voices in the live audio stream.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h3>Verify</h3>
+        <p>Compare the caller's voiceprint against trusted, enrolled speaker profiles.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h3>Score</h3>
+        <p>Combine voice integrity, identity match and transaction context into one score.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">04</span>
+        <h3>Respond</h3>
+        <p>Trigger the response the risk level calls for — allow, verify or block.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="section" id="usecases">
+    <div class="section-head">
+      <p class="eyebrow">Use Cases</p>
+      <h2>Built for where voice fraud does the most damage.</h2>
+    </div>
+    <div class="usecase-grid">
+      <article class="usecase-card">
+        <h3>Banking &amp; Finance</h3>
+        <p>Prevent voice-based fraud during high-value transactions and phone banking.</p>
+      </article>
+      <article class="usecase-card">
+        <h3>Enterprise</h3>
+        <p>Protect executives and employees from impersonation and wire-transfer scams.</p>
+      </article>
+      <article class="usecase-card">
+        <h3>Telecom &amp; VoIP</h3>
+        <p>Monitor voice integrity continuously across live communication networks.</p>
+      </article>
+      <article class="usecase-card">
+        <h3>Government</h3>
+        <p>Strengthen protection against official impersonation in citizen-facing calls.</p>
+      </article>
+      <article class="usecase-card">
+        <h3>End Users</h3>
+        <p>Get a timely warning before trusting a suspicious caller with sensitive information.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section class="section impact-section">
+    <div class="impact-grid">
+      <div class="impact-item">
+        <h3>Real-Time Protection</h3>
+        <p>Instant risk scores and alerts during a live call, not after the fraud is done.</p>
+      </div>
+      <div class="impact-item">
+        <h3>Fraud Prevention</h3>
+        <p>Catch voice cloning before a sensitive action — a transfer, a reset, an approval — is authorized.</p>
+      </div>
+      <div class="impact-item">
+        <h3>Privacy First</h3>
+        <p>Feature-only logging and privacy-preserving inference; raw audio is never retained.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section class="section market-section">
+    <div class="section-head">
+      <p class="eyebrow">Market Opportunity</p>
+      <h2>Voice biometrics is becoming default infrastructure.</h2>
+    </div>
+    <div class="market-grid">
+      <div class="market-card">
+        <span class="market-label">TAM</span>
+        <span class="market-value" data-count="2.78" data-prefix="$" data-suffix="B">$0B</span>
+        <p>Global voice biometrics market, 2025.</p>
+      </div>
+      <div class="market-card">
+        <span class="market-label">SAM</span>
+        <span class="market-value" data-count="1.17" data-prefix="$" data-suffix="B">$0B</span>
+        <p>BFSI, government and telecom segments.</p>
+      </div>
+      <div class="market-card">
+        <span class="market-label">SOM</span>
+        <span class="market-value" data-count="11.7" data-prefix="$" data-suffix="M">$0M</span>
+        <p>Initial 1% target opportunity.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNOLOGY / ARCHITECTURE -->
+  <section class="section" id="tech">
+    <div class="section-head">
+      <p class="eyebrow">Technology</p>
+      <h2>A modular, integration-ready architecture.</h2>
+      <p class="section-sub">The engine is exposed through REST and gRPC APIs so it can sit inside an existing call stack rather than replace it.</p>
+    </div>
+    <div class="arch-diagram">
+      <div class="arch-node">Live Call</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-node">Audio Stream → Voice Processing</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-stack">
+        <div class="arch-stack-row">Voice Integrity Engine</div>
+        <div class="arch-stack-row">Speaker Verification</div>
+        <div class="arch-stack-row">Context Risk Engine</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-node">Risk Score</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-node arch-node-final">Security Response</div>
+    </div>
+    <div class="tech-tags">
+      <span>Speech Processing</span><span>Deep Learning</span><span>Speaker Verification</span>
+      <span>Deepfake Detection</span><span>Contextual Risk Analysis</span><span>REST APIs</span>
+      <span>gRPC</span><span>Edge Inference</span><span>Privacy-Preserving Logging</span>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="section" id="research">
+    <div class="section-head">
+      <p class="eyebrow">Research &amp; Trust</p>
+      <h2>Built on published security research.</h2>
+      <p class="section-sub">VoiceShield AI is not certified by these bodies — they inform the detection and risk approach as standards and research references.</p>
+    </div>
+    <div class="research-grid" id="researchGrid"></div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section final-cta">
+    <h2>See it catch a cloned voice in real time.</h2>
+    <button class="btn btn-primary btn-lg" data-nav="console">Launch Security Console</button>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="brand-mark-small">◉</span>
+        <span>VoiceShield AI</span>
+        <p>Real-time protection against AI voice impersonation.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#platform" data-scroll="platform">Platform</a>
+        <a href="#tech" data-scroll="tech">Technology</a>
+        <a href="#usecases" data-scroll="usecases">Use Cases</a>
+        <a href="#research" data-scroll="research">Research</a>
+        <a href="#" data-nav="api">API</a>
+        <a href="#" id="contactLink">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-badge">Built for Smart India Hackathon</span>
+      <span class="footer-team">Team_Pikachu</span>
+    </div>
+  </footer>
+</main>
+
+<!-- ============ APP SHELL (dashboard) ============ -->
+<div id="app" class="app-shell" hidden>
+  <aside class="sidebar" id="sidebar">
+    <button class="brand brand-app" data-nav="home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2 L28 7 V15 C28 22.5 22.7 27.8 16 30 C9.3 27.8 4 22.5 4 15 V7 Z" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M9 16.5 L12 13 L14.5 19 L17.5 9 L20 16.5 L23 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>VoiceShield<em>AI</em></span>
+    </button>
+    <nav class="sidebar-nav">
+      <button class="side-link active" data-tab="overview">Overview</button>
+      <button class="side-link" data-tab="live">Live Monitoring</button>
+      <button class="side-link" data-tab="threats">Threats</button>
+      <button class="side-link" data-tab="investigation">Call Investigation</button>
+      <button class="side-link" data-tab="analytics">Analytics</button>
+      <button class="side-link" data-tab="speakers">Speakers</button>
+      <button class="side-link" data-tab="risk">Risk Engine</button>
+      <button class="side-link" data-tab="api">API Integration</button>
+      <button class="side-link" data-tab="settings">Settings</button>
+    </nav>
+    <div class="sidebar-status">
+      <span>System Status</span>
+      <span class="status-ok">● Operational</span>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="nav-burger sidebar-burger" id="sidebarBurger" aria-label="Toggle sidebar"><span></span><span></span><span></span></button>
+      <h1 id="tabTitle">Voice Security Console</h1>
+      <div class="topbar-status" id="topbarStatus">● SYSTEM OPERATIONAL</div>
+      <button class="btn btn-ghost btn-sm" data-nav="home">Exit Console</button>
+    </header>
+
+    <div class="app-content">
+
+      <!-- OVERVIEW TAB -->
+      <section class="tab-panel active" id="tab-overview">
+        <div class="kpi-grid">
+          <div class="kpi-card"><span class="kpi-label">Calls Analyzed</span><span class="kpi-value" id="kpiCalls">12,847</span></div>
+          <div class="kpi-card kpi-danger"><span class="kpi-label">Threats Detected</span><span class="kpi-value" id="kpiThreats">184</span></div>
+          <div class="kpi-card kpi-safe"><span class="kpi-label">Verified Speakers</span><span class="kpi-value" id="kpiVerified">9,421</span></div>
+          <div class="kpi-card"><span class="kpi-label">Active Calls</span><span class="kpi-value" id="kpiActive">27</span></div>
+        </div>
+
+        <div class="monitor-grid">
+          <!-- LIVE CALL MONITOR -->
+          <div class="panel monitor-panel">
+            <div class="panel-head">
+              <h2>Live Call Analysis</h2>
+              <span class="pill" id="callStatusPill">ANALYZING</span>
+            </div>
+            <div class="call-meta">
+              <div><span>Caller</span><strong id="callCaller">Unknown Caller</strong></div>
+              <div><span>Call ID</span><strong id="callId">VS-20481</strong></div>
+              <div><span>Duration</span><strong id="callDuration">04:32</strong></div>
+              <div><span>Network</span><strong id="callNetwork">VoIP</strong></div>
+            </div>
+            <div class="waveform waveform-lg" id="liveWaveform"></div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-ring" data-value="94"><span>94%</span></div>
+                <p>Voice Integrity</p>
+              </div>
+              <div class="metric">
+                <div class="metric-ring" data-value="87"><span>87%</span></div>
+                <p>Speaker Match</p>
+              </div>
+              <div class="metric">
+                <div class="metric-ring metric-ring-warn" data-value="8"><span>8%</span></div>
+                <p>Synthetic Probability</p>
+              </div>
+              <div class="metric">
+                <div class="metric-ring metric-ring-warn" data-value="21"><span>21%</span></div>
+                <p>Context Risk</p>
+              </div>
+            </div>
+
+            <div class="risk-banner risk-low" id="riskBanner">
+              <div>
+                <span class="risk-title">Impersonation Risk</span>
+                <span class="risk-score" id="riskScoreOverview">18 / 100</span>
+              </div>
+              <span class="risk-status" id="riskStatusOverview">LOW RISK</span>
+            </div>
+
+            <div class="demo-controls">
+              <button class="btn btn-primary" id="startAnalysisBtn">Start Live Analysis</button>
+              <select id="scenarioSelect" class="scenario-select">
+                <option value="safe">Safe Call</option>
+                <option value="suspicious">Suspicious Call</option>
+                <option value="clone">AI Voice Clone</option>
+                <option value="highrisk">High-Risk Impersonation</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- SPEAKER VERIFICATION -->
+          <div class="panel">
+            <div class="panel-head"><h2>Speaker Verification</h2></div>
+            <div class="speaker-block">
+              <div class="confidence-ring" id="speakerRing"><span id="speakerMatchVal">92.4%</span></div>
+              <div class="speaker-info">
+                <h3>Rajesh Kumar</h3>
+                <span class="pill pill-pass" id="speakerStatusPill">VERIFIED</span>
+                <dl>
+                  <dt>Voice Profile</dt><dd>Enrolled, 14 samples</dd>
+                  <dt>Last Verified</dt><dd>2 minutes ago</dd>
+                  <dt>Confidence</dt><dd id="speakerConfidenceText">92.4%</dd>
+                  <dt>Profile Status</dt><dd>Active</dd>
+                </dl>
+                <button class="btn btn-outline btn-sm">View Speaker Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETECTION ENGINE -->
+        <div class="panel">
+          <div class="panel-head"><h2>Voice Integrity Engine</h2></div>
+          <div class="engine-triad engine-triad-live">
+            <article class="engine-tile">
+              <h3>Acoustic Analysis</h3>
+              <p>Pitch · Energy · Voice quality · Micro-prosody</p>
+              <div class="progress-track"><div class="progress-fill" id="progAcoustic" style="width:96%"></div></div>
+              <span class="pill pill-pass" id="pillAcoustic">PASSED</span>
+            </article>
+            <article class="engine-tile">
+              <h3>Spectral Analysis</h3>
+              <p>Spectral anomalies · Frequency artifacts · Synthetic patterns</p>
+              <div class="progress-track"><div class="progress-fill" id="progSpectral" style="width:93%"></div></div>
+              <span class="pill pill-pass" id="pillSpectral">PASSED</span>
+            </article>
+            <article class="engine-tile">
+              <h3>Prosodic Analysis</h3>
+              <p>Rhythm · Intonation · Speaking pattern · Pauses</p>
+              <div class="progress-track"><div class="progress-fill" id="progProsodic" style="width:91%"></div></div>
+              <span class="pill pill-pass" id="pillProsodic">PASSED</span>
+            </article>
+          </div>
+        </div>
+
+        <!-- RESPONSE -->
+        <div class="panel">
+          <div class="panel-head"><h2>Recommended Response</h2></div>
+          <ul class="response-list" id="responseList">
+            <li>✓ Allow transaction</li>
+            <li>✓ Continue monitoring</li>
+          </ul>
+          <div class="response-actions">
+            <button class="btn btn-safe" id="approveBtn">Approve</button>
+            <button class="btn btn-warn" id="verifyBtn">Request Verification</button>
+            <button class="btn btn-danger" id="blockBtn">Block Action</button>
+          </div>
+          <p class="response-note" id="responseNote">No action taken yet for this call.</p>
+        </div>
+      </section>
+
+      <!-- LIVE MONITORING TAB -->
+      <section class="tab-panel" id="tab-live">
+        <div class="panel">
+          <div class="panel-head"><h2>Active Call Streams</h2></div>
+          <div class="table-wrap">
+            <table class="data-table" id="liveCallsTable">
+              <thead><tr><th>Call ID</th><th>Caller</th><th>Duration</th><th>Network</th><th>Risk</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- THREATS TAB -->
+      <section class="tab-panel" id="tab-threats">
+        <div class="panel">
+          <div class="panel-head panel-head-row">
+            <h2>Threat Intelligence</h2>
+            <input type="search" id="threatSearch" placeholder="Search caller or threat type…" class="search-input" />
+          </div>
+          <div class="filter-row" id="threatFilters">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="critical">Critical</button>
+            <button class="filter-chip" data-filter="high">High</button>
+            <button class="filter-chip" data-filter="medium">Medium</button>
+            <button class="filter-chip" data-filter="low">Low</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="threatTable">
+              <thead><tr><th>Time</th><th>Caller</th><th>Threat</th><th>Confidence</th><th>Risk</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALL INVESTIGATION TAB -->
+      <section class="tab-panel" id="tab-investigation">
+        <div class="panel">
+          <div class="panel-head"><h2>Call Investigation</h2></div>
+          <div class="investigation-meta" id="investigationMeta"></div>
+
+          <div class="invest-grid">
+            <div>
+              <h3 class="sub-head">Audio Analysis</h3>
+              <div class="waveform" id="investWaveform"></div>
+            </div>
+            <div>
+              <h3 class="sub-head">AI Detection</h3>
+              <p class="big-stat" id="investSynthetic">96.8%</p>
+              <p class="stat-label">Synthetic probability</p>
+            </div>
+            <div>
+              <h3 class="sub-head">Speaker Verification</h3>
+              <p class="big-stat big-stat-danger" id="investMatch">42.1%</p>
+              <p class="stat-label">Voice match</p>
+            </div>
+          </div>
+
+          <div class="invest-grid">
+            <div>
+              <h3 class="sub-head">Behavioral Analysis</h3>
+              <ul class="flag-list">
+                <li>Suspicious pause patterns</li>
+                <li>Unusual speech cadence</li>
+                <li>Voice inconsistency across segments</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="sub-head">Context Analysis</h3>
+              <ul class="flag-list">
+                <li>High-value transaction requested</li>
+                <li>Caller identity mismatch</li>
+                <li>New device detected</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="risk-banner risk-critical">
+            <div>
+              <span class="risk-title">Critical Threat</span>
+              <span class="risk-score">94 / 100</span>
+            </div>
+            <span class="risk-status">BLOCK TRANSACTION + ESCALATE</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS TAB -->
+      <section class="tab-panel" id="tab-analytics">
+        <div class="panel-head-row analytics-head">
+          <h2>Security Analytics</h2>
+          <div class="filter-row" id="analyticsFilters">
+            <button class="filter-chip active" data-range="24h">24 Hours</button>
+            <button class="filter-chip" data-range="7d">7 Days</button>
+            <button class="filter-chip" data-range="30d">30 Days</button>
+            <button class="filter-chip" data-range="90d">90 Days</button>
+          </div>
+        </div>
+        <div class="analytics-grid">
+          <div class="panel"><h3 class="sub-head">Voice Threats Over Time</h3><canvas id="chartThreats"></canvas></div>
+          <div class="panel"><h3 class="sub-head">Detection Accuracy</h3><canvas id="chartAccuracy"></canvas></div>
+          <div class="panel"><h3 class="sub-head">Threat Distribution</h3><canvas id="chartDistribution"></canvas></div>
+          <div class="panel"><h3 class="sub-head">Risk Distribution</h3><canvas id="chartRisk"></canvas></div>
+        </div>
+      </section>
+
+      <!-- SPEAKERS TAB -->
+      <section class="tab-panel" id="tab-speakers">
+        <div class="panel">
+          <div class="panel-head"><h2>Enrolled Speaker Profiles</h2></div>
+          <div class="table-wrap">
+            <table class="data-table" id="speakersTable">
+              <thead><tr><th>Name</th><th>Role</th><th>Samples</th><th>Last Verified</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RISK ENGINE TAB -->
+      <section class="tab-panel" id="tab-risk">
+        <div class="panel">
+          <div class="panel-head"><h2>Context-Aware Risk Engine</h2></div>
+          <div class="risk-inputs">
+            <div class="risk-input"><span>Voice Integrity</span><div class="mini-bar"><div style="width:94%"></div></div></div>
+            <div class="risk-input"><span>Speaker Identity</span><div class="mini-bar"><div style="width:87%"></div></div></div>
+            <div class="risk-input"><span>Caller Context</span><div class="mini-bar"><div style="width:79%"></div></div></div>
+            <div class="risk-input"><span>Transaction Context</span><div class="mini-bar"><div style="width:70%"></div></div></div>
+          </div>
+          <div class="risk-score-hero">
+            <span class="risk-score-big" id="riskEngineScore">18</span>
+            <span>/ 100</span>
+          </div>
+          <div class="risk-scale">
+            <div class="risk-scale-track">
+              <span class="risk-scale-marker" id="riskMarker" style="left:18%"></span>
+            </div>
+            <div class="risk-scale-labels">
+              <span>0 — Safe</span><span>30 — Warning</span><span>60 — Critical</span><span>100</span>
+            </div>
+          </div>
+          <div class="risk-outcome">
+            <div><span>Risk Level</span><strong id="riskEngineLevel">LOW</strong></div>
+            <div><span>Recommended Action</span><strong id="riskEngineAction">ALLOW</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- API TAB -->
+      <section class="tab-panel" id="tab-api">
+        <div class="panel">
+          <div class="panel-head"><h2>Security API</h2></div>
+          <div class="endpoint-list">
+            <div class="endpoint"><span class="method method-post">POST</span><code>/api/analyze</code></div>
+            <div class="endpoint"><span class="method method-post">POST</span><code>/api/verify</code></div>
+            <div class="endpoint"><span class="method method-get">GET</span><code>/api/risk</code></div>
+            <div class="endpoint"><span class="method method-post">POST</span><code>/api/respond</code></div>
+          </div>
+          <div class="api-key-row">
+            <code id="apiKeyDisplay">vs_live_••••••••••••3f9a</code>
+            <button class="btn btn-outline btn-sm" id="copyKeyBtn">Copy API Key</button>
+            <button class="btn btn-ghost btn-sm" id="genKeyBtn">Generate New Key</button>
+          </div>
+          <h3 class="sub-head">Try it — POST /api/analyze</h3>
+          <div class="api-demo">
+            <pre class="code-block" id="apiRequestBlock">{
+  "call_id": "VS-20481",
+  "audio_ref": "stream://live/vs-20481"
+}</pre>
+            <button class="btn btn-primary btn-sm" id="runApiBtn">Run Request</button>
+            <pre class="code-block code-block-response" id="apiResponseBlock">// response will appear here</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section class="tab-panel" id="tab-settings">
+        <div class="panel">
+          <div class="panel-head"><h2>Settings</h2></div>
+          <div class="settings-list">
+            <div class="setting-row">
+              <div><strong>Detection Sensitivity</strong><p>How aggressively the engine flags borderline audio.</p></div>
+              <input type="range" min="1" max="5" value="3" class="slider" />
+            </div>
+            <div class="setting-row">
+              <div><strong>Real-Time Monitoring</strong><p>Continuously analyze active calls as they happen.</p></div>
+              <label class="toggle"><input type="checkbox" checked /><span></span></label>
+            </div>
+            <div class="setting-row">
+              <div><strong>Automatic Blocking</strong><p>Block a call automatically when risk crosses Critical.</p></div>
+              <label class="toggle"><input type="checkbox" /><span></span></label>
+            </div>
+            <div class="setting-row">
+              <div><strong>Speaker Verification</strong><p>Require a voiceprint match against enrolled profiles.</p></div>
+              <label class="toggle"><input type="checkbox" checked /><span></span></label>
+            </div>
+            <div class="setting-row">
+              <div><strong>Risk Threshold</strong><p>Score above which a call is treated as high risk.</p></div>
+              <input type="range" min="0" max="100" value="60" class="slider" />
+            </div>
+            <div class="setting-row">
+              <div><strong>Alert Notifications</strong><p>Send an alert to the security team on Critical threats.</p></div>
+              <label class="toggle"><input type="checkbox" checked /><span></span></label>
+            </div>
+            <div class="setting-row">
+              <div><strong>Privacy Mode</strong><p>Store detection features only — never raw audio.</p></div>
+              <label class="toggle"><input type="checkbox" checked /><span></span></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
