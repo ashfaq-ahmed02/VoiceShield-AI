@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import random
 import string
-import time
 from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, request
