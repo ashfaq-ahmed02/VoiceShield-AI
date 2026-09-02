@@ -46,27 +46,77 @@ def cors_preflight(_any):
 # In-memory "database" (demo only — replace with real storage in production)
 # ---------------------------------------------------------------------------
 
+
 SCENARIOS = {
-    "safe":       {"voice_integrity": 0.96, "speaker_match": 0.94, "synthetic_probability": 0.03, "context_risk": 0.12},
-    "suspicious": {"voice_integrity": 0.78, "speaker_match": 0.71, "synthetic_probability": 0.22, "context_risk": 0.48},
-    "clone":      {"voice_integrity": 0.55, "speaker_match": 0.38, "synthetic_probability": 0.88, "context_risk": 0.60},
-    "highrisk":   {"voice_integrity": 0.31, "speaker_match": 0.22, "synthetic_probability": 0.96, "context_risk": 0.85},
+    "safe": {
+        "voice_integrity": 0.96,
+        "speaker_match": 0.94,
+        "synthetic_probability": 0.03,
+        "context_risk": 0.12},
+    "suspicious": {
+        "voice_integrity": 0.78,
+        "speaker_match": 0.71,
+        "synthetic_probability": 0.22,
+        "context_risk": 0.48},
+    "clone": {
+        "voice_integrity": 0.55,
+        "speaker_match": 0.38,
+        "synthetic_probability": 0.88,
+        "context_risk": 0.60},
+    "highrisk": {
+        "voice_integrity": 0.31,
+        "speaker_match": 0.22,
+        "synthetic_probability": 0.96,
+        "context_risk": 0.85},
 }
 
-SPEAKERS = [
-    {"name": "Rajesh Kumar", "role": "Account Holder", "samples": 14, "last_verified": "2 minutes ago", "status": "Active", "match": 92.4},
-    {"name": "Anita Sharma", "role": "Relationship Manager", "samples": 9, "last_verified": "1 hour ago", "status": "Active", "match": 88.1},
-    {"name": "Vikram Singh", "role": "Executive", "samples": 22, "last_verified": "3 hours ago", "status": "Active", "match": 95.7},
-    {"name": "Priya Nair", "role": "Account Holder", "samples": 6, "last_verified": "1 day ago", "status": "Pending Re-enrollment", "match": 61.2},
-    {"name": "Suresh Iyer", "role": "Account Holder", "samples": 11, "last_verified": "4 hours ago", "status": "Active", "match": 89.9},
-]
+SPEAKERS = [{"name": "Rajesh Kumar",
+             "role": "Account Holder",
+             "samples": 14,
+             "last_verified": "2 minutes ago",
+             "status": "Active",
+             "match": 92.4},
+            {"name": "Anita Sharma",
+             "role": "Relationship Manager",
+             "samples": 9,
+             "last_verified": "1 hour ago",
+             "status": "Active",
+             "match": 88.1},
+            {"name": "Vikram Singh",
+             "role": "Executive",
+             "samples": 22,
+             "last_verified": "3 hours ago",
+             "status": "Active",
+             "match": 95.7},
+            {"name": "Priya Nair",
+             "role": "Account Holder",
+             "samples": 6,
+             "last_verified": "1 day ago",
+             "status": "Pending Re-enrollment",
+             "match": 61.2},
+            {"name": "Suresh Iyer",
+             "role": "Account Holder",
+             "samples": 11,
+             "last_verified": "4 hours ago",
+             "status": "Active",
+             "match": 89.9},
+            ]
 
-THREAT_TYPES = ["Voice Clone", "Synthetic Voice", "Spoof Attempt", "Normal Call", "Replay Attack"]
+THREAT_TYPES = [
+    "Voice Clone",
+    "Synthetic Voice",
+    "Spoof Attempt",
+    "Normal Call",
+    "Replay Attack"]
 
 RESPONSE_LOG: list[dict] = []
 
 
-def _risk_score(voice_integrity: float, speaker_match: float, synthetic_probability: float, context_risk: float) -> int:
+def _risk_score(
+        voice_integrity: float,
+        speaker_match: float,
+        synthetic_probability: float,
+        context_risk: float) -> int:
     """Combine the four sub-scores into a single 0-100 impersonation risk score."""
     integrity_risk = (1 - voice_integrity) * 100
     identity_risk = (1 - speaker_match) * 100
@@ -112,7 +162,9 @@ def _gen_api_key() -> str:
 
 @app.get("/api/health")
 def health():
-    return jsonify({"status": "operational", "service": "VoiceShield AI API", "time": datetime.utcnow().isoformat()})
+    return jsonify({"status": "operational",
+                    "service": "VoiceShield AI API",
+                    "time": datetime.utcnow().isoformat()})
 
 
 @app.post("/api/analyze")
@@ -121,12 +173,19 @@ def analyze():
     (safe / suspicious / clone / highrisk) for the demo mode; otherwise
     generates a plausible random profile."""
     payload = request.get_json(silent=True) or {}
-    call_id = payload.get("call_id", "VS-" + "".join(random.choices(string.digits, k=5)))
+    call_id = payload.get(
+        "call_id",
+        "VS-" +
+        "".join(
+            random.choices(
+                string.digits,
+                k=5)))
     scenario = payload.get("scenario")
 
     if scenario in SCENARIOS:
         base = SCENARIOS[scenario]
-        jitter = lambda v: max(0.0, min(1.0, v + random.uniform(-0.03, 0.03)))
+        def jitter(v): return max(
+            0.0, min(1.0, v + random.uniform(-0.03, 0.03)))
         metrics = {k: round(jitter(v), 3) for k, v in base.items()}
     else:
         # simulate a call leaning toward "safe" most of the time
@@ -154,9 +213,12 @@ def verify():
     """Verify a caller's voiceprint against an enrolled speaker profile."""
     payload = request.get_json(silent=True) or {}
     name = payload.get("speaker_name", "Rajesh Kumar")
-    speaker = next((s for s in SPEAKERS if s["name"].lower() == name.lower()), SPEAKERS[0])
+    speaker = next(
+        (s for s in SPEAKERS if s["name"].lower() == name.lower()),
+        SPEAKERS[0])
 
-    match = round(max(0, min(100, speaker["match"] + random.uniform(-2, 2))), 1)
+    match = round(
+        max(0, min(100, speaker["match"] + random.uniform(-2, 2))), 1)
     verified = match >= 75
     return jsonify({
         "speaker_name": speaker["name"],
@@ -198,7 +260,8 @@ def respond():
     call_id = payload.get("call_id", "unknown")
     action = payload.get("action")
     if action not in {"approve", "verify", "block"}:
-        return jsonify({"error": "action must be one of: approve, verify, block"}), 400
+        return jsonify(
+            {"error": "action must be one of: approve, verify, block"}), 400
 
     entry = {
         "call_id": call_id,
@@ -226,11 +289,14 @@ def threats():
         else:
             confidence = random.randint(55, 99)
             risk = "critical" if confidence > 90 else "high" if confidence > 75 else "medium"
-            status = {"critical": "Blocked", "high": "Investigating", "medium": "Verified"}[risk]
+            status = {
+                "critical": "Blocked",
+                "high": "Investigating",
+                "medium": "Verified"}[risk]
         ts = now - timedelta(minutes=random.randint(0, 600))
         rows.append({
             "time": ts.strftime("%H:%M"),
-            "caller": f"+91 {random.randint(70,99)}XXX{random.randint(10000,99999)}",
+            "caller": f"+91 {random.randint(70, 99)}XXX{random.randint(10000, 99999)}",
             "threat": t,
             "confidence": confidence,
             "risk": risk.capitalize(),
@@ -240,7 +306,8 @@ def threats():
     if risk_filter != "all":
         rows = [r for r in rows if r["risk"].lower() == risk_filter]
     if q:
-        rows = [r for r in rows if q in r["caller"].lower() or q in r["threat"].lower()]
+        rows = [r for r in rows if q in r["caller"].lower()
+                or q in r["threat"].lower()]
 
     rows.sort(key=lambda r: r["time"], reverse=True)
     return jsonify({"count": len(rows), "results": rows})
@@ -258,28 +325,41 @@ def analytics():
     points = {"24h": 12, "7d": 7, "30d": 30, "90d": 12}.get(range_key, 12)
 
     threats_series = [random.randint(5, 45) for _ in range(points)]
-    accuracy_series = [round(random.uniform(93, 99.6), 1) for _ in range(points)]
+    accuracy_series = [round(random.uniform(93, 99.6), 1)
+                       for _ in range(points)]
 
-    return jsonify({
-        "range": range_key,
-        "threats_over_time": threats_series,
-        "detection_accuracy": accuracy_series,
-        "threat_distribution": {
-            "AI Voice Clone": 28, "Synthetic Speech": 19, "Replay Attack": 11, "Spoofing": 15, "Normal": 27,
-        },
-        "risk_distribution": {"Low": 61, "Medium": 22, "High": 11, "Critical": 6},
-        "kpis": {
-            "calls_analyzed": 12847,
-            "threats_detected": 184,
-            "verified_speakers": 9421,
-            "active_calls": random.randint(15, 35),
-        },
-    })
+    return jsonify(
+        {
+            "range": range_key,
+            "threats_over_time": threats_series,
+            "detection_accuracy": accuracy_series,
+            "threat_distribution": {
+                "AI Voice Clone": 28,
+                "Synthetic Speech": 19,
+                "Replay Attack": 11,
+                "Spoofing": 15,
+                "Normal": 27,
+            },
+            "risk_distribution": {
+                "Low": 61,
+                "Medium": 22,
+                "High": 11,
+                "Critical": 6},
+            "kpis": {
+                "calls_analyzed": 12847,
+                "threats_detected": 184,
+                "verified_speakers": 9421,
+                "active_calls": random.randint(
+                    15,
+                    35),
+            },
+        })
 
 
 @app.post("/api/keys/generate")
 def generate_key():
-    return jsonify({"api_key": _gen_api_key(), "generated_at": datetime.utcnow().isoformat()})
+    return jsonify({"api_key": _gen_api_key(),
+                    "generated_at": datetime.utcnow().isoformat()})
 
 
 if __name__ == "__main__":
