@@ -151,6 +151,39 @@ def _risk_level(score: int) -> str:
     return "CRITICAL"
 
 
+def _voice_safety(metrics: dict, score: int) -> dict:
+    """Translate detection signals into an agent decision for the UI."""
+    synthetic = metrics["synthetic_probability"]
+    natural_voice = (
+        synthetic < 0.10
+        and metrics["voice_integrity"] >= 0.85
+        and metrics["speaker_match"] >= 0.80
+        and score < 30
+    )
+    harmful_ai_voice = synthetic >= 0.50 or score >= 60
+
+    if harmful_ai_voice:
+        return {
+            "voice_classification": "AI_VOICE_DETECTED",
+            "safety_decision": "HARMFUL",
+            "agent": "Voice Safety Agent",
+            "agent_message": "Synthetic or cloned voice indicators detected. Block sensitive actions and escalate.",
+        }
+    if natural_voice:
+        return {
+            "voice_classification": "NORMAL_HUMAN_VOICE",
+            "safety_decision": "SAFE",
+            "agent": "Voice Safety Agent",
+            "agent_message": "Voice signals match a normal enrolled speaker. Allow the call and continue monitoring.",
+        }
+    return {
+        "voice_classification": "UNCERTAIN",
+        "safety_decision": "REVIEW",
+        "agent": "Voice Safety Agent",
+        "agent_message": "Signals are mixed. Request verification before authorizing sensitive actions.",
+    }
+
+
 def _gen_api_key() -> str:
     return "vs_live_" + "".join(random.choices(string.hexdigits.lower(), k=24))
 
@@ -204,6 +237,7 @@ def analyze():
         "recommendation": _recommendation(score),
         "analyzed_at": datetime.utcnow().isoformat(),
     }
+    result.update(_voice_safety(metrics, score))
     return jsonify(result)
 
 

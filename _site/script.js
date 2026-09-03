@@ -172,6 +172,20 @@ function applyRisk(score){
   $('#responseNote').textContent = 'No action taken yet for this call.';
 }
 
+function applyAgentDecision(result){
+  const decision = result.safety_decision || 'REVIEW';
+  const panel = $('#agentDecision');
+  const title = $('#agentDecisionTitle');
+  const message = $('#agentDecisionMessage');
+  const className = decision === 'HARMFUL' ? 'agent-harmful' : decision === 'SAFE' ? 'agent-safe' : 'agent-review';
+  const classification = result.voice_classification === 'AI_VOICE_DETECTED'
+    ? 'AI VOICE DETECTED'
+    : result.voice_classification === 'NORMAL_HUMAN_VOICE' ? 'NORMAL HUMAN VOICE' : 'UNCERTAIN VOICE';
+  panel.className = `agent-decision ${className}`;
+  title.textContent = `${classification} · ${decision}`;
+  message.textContent = result.agent_message || 'Voice Safety Agent is reviewing this call.';
+}
+
 /* ---------- demo scenarios ---------- */
 const SCENARIOS = {
   safe:      { integrity: 96, match: 94, synthetic: 3,  context: 12, risk: 8,  status: 'ANALYZING', label: 'VERIFIED' },
@@ -194,6 +208,11 @@ function applyScenarioLocally(key){
     ring.querySelector('span').textContent = `${values[i]}%`;
   });
   applyRisk(s.risk);
+  applyAgentDecision({
+    safety_decision: s.synthetic >= 50 || s.risk >= 60 ? 'HARMFUL' : s.synthetic < 10 && s.integrity >= 85 && s.match >= 80 ? 'SAFE' : 'REVIEW',
+    voice_classification: s.synthetic >= 50 ? 'AI_VOICE_DETECTED' : s.synthetic < 10 ? 'NORMAL_HUMAN_VOICE' : 'UNCERTAIN',
+    agent_message: s.synthetic >= 50 ? 'Synthetic or cloned voice indicators detected. Block sensitive actions and escalate.' : s.synthetic < 10 && s.integrity >= 85 && s.match >= 80 ? 'Voice signals match a normal enrolled speaker. Allow the call and continue monitoring.' : 'Signals are mixed. Request verification before authorizing sensitive actions.'
+  });
   $('#callStatusPill').textContent = s.status;
 }
 
@@ -227,6 +246,7 @@ async function runLiveAnalysis(){
         ring.querySelector('span').textContent = `${values[i]}%`;
       });
       applyRisk(data.risk_score);
+      applyAgentDecision(data);
       $('#callStatusPill').textContent = data.risk_score < 30 ? 'VERIFIED' : data.risk_score < 60 ? 'REVIEW' : 'FLAGGED';
       btn.disabled = false;
       btn.textContent = 'Start Live Analysis';
@@ -503,6 +523,7 @@ function init(){
   state.liveCalls = generateLiveCalls();
 
   applyRisk(18);
+  applyScenarioLocally('safe');
 }
 
 document.addEventListener('DOMContentLoaded', init);

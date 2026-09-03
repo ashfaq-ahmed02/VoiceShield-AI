@@ -317,6 +317,16 @@ code{ font-family:var(--font-mono); }
 .risk-medium{ background:var(--amber-dim); } .risk-medium .risk-score{ color:var(--amber); } .risk-medium .risk-status{ background:rgba(242,169,60,.25); color:var(--amber); }
 .risk-high, .risk-critical{ background:var(--red-dim); } .risk-high .risk-score, .risk-critical .risk-score{ color:var(--red); } .risk-high .risk-status, .risk-critical .risk-status{ background:rgba(255,91,95,.25); color:var(--red); }
 
+.agent-decision{ display:flex; gap:.8rem; align-items:flex-start; margin-top:.8rem; padding:.85rem 1rem; border:1px solid var(--border); border-left:3px solid var(--green); border-radius:var(--radius-m); background:var(--panel-2); }
+.agent-decision.agent-harmful{ border-left-color:var(--red); }
+.agent-decision.agent-review{ border-left-color:var(--amber); }
+.agent-icon{ width:30px; height:30px; display:grid; place-items:center; flex-shrink:0; border-radius:50%; background:var(--green-dim); color:var(--green); font:600 .65rem var(--font-mono); }
+.agent-harmful .agent-icon{ background:var(--red-dim); color:var(--red); }
+.agent-review .agent-icon{ background:var(--amber-dim); color:var(--amber); }
+.agent-label{ display:block; color:var(--text-dim); font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; }
+.agent-decision strong{ display:block; margin:.2rem 0; font:600 .86rem var(--font-mono); }
+.agent-decision p{ color:var(--text-mid); font-size:.78rem; line-height:1.45; }
+
 .demo-controls{ display:flex; gap:.8rem; margin-top:1.2rem; flex-wrap:wrap; }
 .scenario-select{
   background:var(--panel-2); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-s);
